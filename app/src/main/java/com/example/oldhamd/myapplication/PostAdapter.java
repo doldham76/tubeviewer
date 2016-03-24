@@ -18,12 +18,10 @@ import com.facebook.imagepipeline.request.ImageRequest;
 
 import java.util.List;
 
-/**
- * Created by oldhamd on 3/11/2016.
- */
+
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
-    private final int VIEW_ITEM = 1;
-    private final int VIEW_PROG = 0;
+    private final int view_item = 1;
+    private final int view_prog = 0;
     private List<PostInfo> postList;
 
     private int visibleThreshold = 5;
@@ -67,7 +65,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
     @Override
     public int getItemViewType(int position) {
-        return postList.get(position) != null ? VIEW_ITEM : VIEW_PROG;
+        return postList.get(position) != null ? view_item : view_prog;
     }
 
     @Override

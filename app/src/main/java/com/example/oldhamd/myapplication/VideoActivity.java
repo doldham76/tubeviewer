@@ -105,15 +105,15 @@ public class VideoActivity extends AppCompatActivity {
                 System.out.println(result);
                 VideoSource VidSrc = findSource(result, Source);
                 String vidUrl = "";
-                if(VidSrc.s240p != "none"){
+                if(!VidSrc.s240p.equals("none")){
                     vidUrl = VidSrc.s240p;
                     System.out.println(VidSrc.s240p);
                 }
-                if(VidSrc.s480p != "none"){
+                if(!VidSrc.s480p.equals("none")){
                     vidUrl = VidSrc.s480p;
                     System.out.println(VidSrc.s480p);
                 }
-                if(VidSrc.s720p != "none"){
+                if(!VidSrc.s720p.equals("none")){
                     vidUrl = VidSrc.s720p;
                     System.out.println(VidSrc.s720p);
                 }

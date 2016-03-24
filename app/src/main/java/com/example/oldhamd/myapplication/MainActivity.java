@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             String source = params[0];
             try {
                 //results = getRecord( "Post?filter=source%3D" + source + "&limit=50&order=Modified%20DESC" );
-                results = getRecord( "Post?limit=10&order=Modified%20DESC&offset=" + (page*10) );
+                results = getRecord( "Post?filter=source%3Dtube8&limit=10&order=Modified%20DESC&offset=" + (page*10) );
             }catch(Exception e){
                 e.printStackTrace();
             }
