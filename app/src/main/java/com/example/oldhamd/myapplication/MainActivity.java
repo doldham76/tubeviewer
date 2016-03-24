@@ -66,11 +66,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         mTitle = mDrawerTitle = getTitle();
         mDrawerLayout =  (DrawerLayout) findViewById(R.id.drawer_layout);
         mMenuList = (ListView) findViewById(R.id.left_drawer);
-        mMenuList.setAdapter(new ArrayAdapter(this, R.layout.drawer_list_item, MenuTitles));
+        mMenuList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, MenuTitles));
 
         mMenuList.setOnItemClickListener(new DrawerItemClickListener());
-        //toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.content_frame);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.green);
@@ -82,30 +80,35 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         ) {
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                getSupportActionBar().setTitle(mTitle);
+                if(getSupportActionBar() != null) {
+                    getSupportActionBar().setTitle(mTitle);
+                }
                 mDrawerToggle.syncState();
                 //invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerClosed(drawerView);
-                getSupportActionBar().setTitle(mDrawerTitle);
+                if(getSupportActionBar() != null) {
+                    getSupportActionBar().setTitle(mDrawerTitle);
+                }
                 mDrawerToggle.syncState();
                 //invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
         };
         mDrawerToggle.syncState();
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+        }
         handler = new Handler();
         //mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open,  R.string.drawer_close);
         //mDrawerLayout.setDrawerListener(mDrawerToggle);
         mRecycleView = (RecyclerView) findViewById(R.id.rv);
         mLayoutManager = new LinearLayoutManager(this);
         mRecycleView.setLayoutManager(mLayoutManager);
-        postList = new ArrayList<PostInfo>();
+        postList = new ArrayList<>();
         mAdapter = new PostAdapter(postList, mRecycleView);
         mRecycleView.setAdapter(mAdapter);
         mRecycleView.setHasFixedSize(true);
@@ -176,10 +179,12 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     public boolean onOptionsItemSelected(MenuItem item) {
         // The action bar home/up action should open or close the drawer.
         // ActionBarDrawerToggle will take care of this.
+        /*
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-        return super.onOptionsItemSelected(item);
+        */
+        return mDrawerToggle.onOptionsItemSelected(item)|| super.onOptionsItemSelected(item);
     }
 
     private void selectItem(int position) {
