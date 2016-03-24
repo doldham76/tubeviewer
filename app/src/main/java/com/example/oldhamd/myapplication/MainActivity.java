@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private RecyclerView.LayoutManager mLayoutManager;
     private PostAdapter mAdapter;
     private List<PostInfo> postList;
+    private int page = 0;
 
     protected Handler handler;
 
@@ -71,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         mMenuList.setOnItemClickListener(new DrawerItemClickListener());
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.content_frame);
         mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.green);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.blue);
         mDrawerToggle = new ActionBarDrawerToggle(
                 this,
                 mDrawerLayout,
@@ -140,6 +141,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     @Override
     public void onRefresh() {
         // Refresh items
+        page = 0;
         postList.clear();
         new getDFRecord().execute("pornhub");
     }
@@ -199,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             String source = params[0];
             try {
                 //results = getRecord( "Post?filter=source%3D" + source + "&limit=50&order=Modified%20DESC" );
-                results = getRecord( "Post?limit=10&order=Modified%20DESC" );
+                results = getRecord( "Post?limit=10&order=Modified%20DESC&offset=" + (page*10) );
             }catch(Exception e){
                 e.printStackTrace();
             }
@@ -222,6 +224,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                     System.out.println(item.url);
                 }
                 mAdapter.notifyItemInserted(postList.size());
+                page = page + 1;
                 mAdapter.setLoaded();
                 mSwipeRefreshLayout.setRefreshing(false);
 
