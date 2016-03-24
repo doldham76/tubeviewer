@@ -6,6 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="10dp"
+    android:layout_marginLeft="-2.5dp"
+    android:layout_marginRight="-2.5dp"
     card_view:cardPreventCornerOverlap="false"
     card_view:cardCornerRadius="0dp">
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -25,6 +27,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:gravity="center_horizontal"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textStyle="bold"/>

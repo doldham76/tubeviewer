@@ -1,7 +1,9 @@
 package com.example.oldhamd.myapplication;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +32,7 @@ public class VideoActivity extends AppCompatActivity {
 
     VideoView vid;
     private String Source;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +46,22 @@ public class VideoActivity extends AppCompatActivity {
         Intent myIntent = getIntent();
         String vidUrl = myIntent.getStringExtra("url");
         Source = myIntent.getStringExtra("source");
+
+        progressDialog = ProgressDialog.show(this, "Please wait...", "Loading video...", true);
         new getRecord().execute(vidUrl);
+
+        vid.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                progressDialog.dismiss();
+            }
+        });
+        vid.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                finish();
+            }
+        });
     }
 
     @Override
@@ -92,7 +110,7 @@ public class VideoActivity extends AppCompatActivity {
         protected String doInBackground(String...  params){
             String results = "";
             String url = params[0];
-            System.out.println(url);
+            System.out.println("test" + url);
             try {
                 results = getPage(url);
             }catch(Exception e){
@@ -117,9 +135,15 @@ public class VideoActivity extends AppCompatActivity {
                     vidUrl = VidSrc.s720p;
                     System.out.println(VidSrc.s720p);
                 }
-                Uri vidUri = Uri.parse(vidUrl);
-                vid.setVideoURI(vidUri);
-                vid.start();
+                if (!vidUrl.equals("")) {
+                    Uri vidUri = Uri.parse(vidUrl);
+                    vid.setVideoURI(vidUri);
+                    vid.start();
+                }
+                else {
+                    progressDialog.dismiss();
+                    finish();
+                }
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -156,6 +180,9 @@ public class VideoActivity extends AppCompatActivity {
 
     private VideoSource findSource(String result, String source){
         VideoSource src = new VideoSource();
+        int end;
+        String tempURL;
+        String sources;
         switch (source){
             case "pornhub":
                 int startPt = result.indexOf("var player_quality_240p");
@@ -163,7 +190,7 @@ public class VideoActivity extends AppCompatActivity {
                     System.out.println(startPt);
                     int stSC = result.indexOf(";", startPt);
                     System.out.println(stSC);
-                    String tempURL = result.substring(startPt, stSC - 1);
+                    tempURL = result.substring(startPt, stSC - 1);
                     System.out.println(tempURL);
                     src.s240p = tempURL.substring(tempURL.indexOf("'"));
                 }
@@ -193,12 +220,15 @@ public class VideoActivity extends AppCompatActivity {
                 break;
             case "youporn":
                 startPt = result.indexOf("sources: {");
-                int end = result.indexOf("}", startPt);
-                String tempURL = result.substring(startPt, end);
-                String sources = tempURL.replace("sources: ", "");
-                int pos = sources.indexOf("'");
-                src.s240p = sources.substring(pos + 1, sources.indexOf(",") - 1);
-                System.out.println(src.s240p);
+                if(startPt > 0) {
+                    end = result.indexOf("}", startPt);
+                    tempURL = result.substring(startPt, end);
+                    System.out.println(tempURL);
+                    sources = tempURL.replace("sources: ", "");
+                    int pos = sources.indexOf("'");
+                    src.s240p = sources.substring(pos + 1, sources.indexOf(",") - 1);
+                    System.out.println(src.s240p);
+                }
                 break;
             case "redtube":
                 startPt = result.indexOf("sources: {");
